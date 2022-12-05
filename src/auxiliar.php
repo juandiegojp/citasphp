@@ -25,14 +25,19 @@ function obtener_parametro($par, $array)
     return isset($array[$par]) ? trim($array[$par]) : null;
 }
 
+function iniciar()
+{
+    header('Location: /public/index.php');
+}
+
 function volver()
 {
-    header('Location: /index.php');
+    header('Location: /');
 }
 
 function volver_admin()
 {
-    header("Location: /admin/");
+    header("Location: /public/admin/");
 }
 
 function redirigir_login()
