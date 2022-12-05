@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.4/dist/flowbite.min.css" />
     <script>
         function cambiar(el, id) {
             el.preventDefault();
@@ -31,27 +32,54 @@
     }
 
     $pdo = conectar();
-    $sent = $pdo->query("SELECT * FROM articulos ORDER BY codigo");
+    $sent = $pdo->query("SELECT * FROM usuarios");
     ?>
+
+    <nav class="bg-white border-gray-200 dark:bg-gray-900">
+        <div class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl px-4 md:px-6 py-2.5">
+            <a href="https://flowbite.com" class="flex items-center">
+                <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 mr-3 sm:h-9" alt="Flowbite Logo" />
+                <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">CitasPHP</span>
+            </a>
+            <div class="flex items-center">
+                <!-- Nombre del ususario -->
+                <?php if (\App\Tablas\Usuario::esta_logueado()) : ?>
+                    <p class="mr-6 text-sm font-medium text-gray-500 dark:text-white">
+                        <?= hh(\App\Tablas\Usuario::logueado()->usuario) ?>
+                    </p>
+                <?php endif ?>
+                <!-- Modal toggle -->
+                <?php if (!\App\Tablas\Usuario::esta_logueado()) : ?>
+                    <button class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button" data-modal-toggle="authentication-modal">
+                        Login
+                    </button>
+                <?php else : ?>
+                    <a href="/logout.php" class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                        Logout
+                        <svg aria-hidden="true" class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </a>
+                <?php endif ?>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mx-auto">
-        <?php require '../../src/_menu.php' ?>
-        <?php require '../../src/_alerts.php' ?>
         <div class="overflow-x-auto relative mt-4">
             <table class="mx-auto text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <th scope="col" class="py-3 px-6">Código</th>
-                    <th scope="col" class="py-3 px-6">Descripción</th>
-                    <th scope="col" class="py-3 px-6">Precio</th>
+                    <th scope="col" class="py-3 px-6">Nombre</th>
                     <th scope="col" class="py-3 px-6 text-center">Acciones</th>
                 </thead>
                 <tbody>
                     <?php foreach ($sent as $fila) : ?>
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            <td class="py-4 px-6"><?= hh($fila['codigo']) ?></td>
-                            <td class="py-4 px-6"><?= hh($fila['descripcion']) ?></td>
-                            <td class="py-4 px-6"><?= hh($fila['precio']) ?></td>
+                            <td class="py-4 px-6"><?= hh($fila['id_usuario']) ?></td>
+                            <td class="py-4 px-6"><?= hh($fila['nombre']) ?></td>
                             <td class="px-6 text-center">
-                                <?php $fila_id = hh($fila['id']) ?>
+                                <?php $fila_id = hh($fila['id_usuario']) ?>
                                 <a href="/admin/editar.php?id=<?= $fila_id ?>"><button class="focus:outline-none text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">Editar</button></a>
                                 <form action="/admin/borrar.php" method="POST" class="inline">
                                     <input type="hidden" name="id" value="<?= $fila_id ?>">
@@ -89,7 +117,7 @@
             </div>
         </div>
     </div>
-    <script src="/js/flowbite/flowbite.js"></script>
+    <script src="https://unpkg.com/flowbite@1.5.4/dist/flowbite.js"></script>
 </body>
 
 </html>
