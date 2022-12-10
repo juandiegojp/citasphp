@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require '../src/auxiliar.php';
+require '../vendor/autoload.php';
 
 $_SESSION = [];
 $params = session_get_cookie_params();

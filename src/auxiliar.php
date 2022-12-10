@@ -2,7 +2,7 @@
 
 function conectar()
 {
-    return new \PDO('pgsql:host=localhost,dbname=tienda', 'tienda', 'tienda');
+    return new \PDO('pgsql:host=localhost,dbname=citasphp', 'citasphp', 'citasphp');
 }
 
 function hh($x)
@@ -25,19 +25,14 @@ function obtener_parametro($par, $array)
     return isset($array[$par]) ? trim($array[$par]) : null;
 }
 
-function iniciar()
-{
-    header('Location: /public/index.php');
-}
-
 function volver()
 {
-    header('Location: /');
+    header('Location: /index.php');
 }
 
 function volver_admin()
 {
-    header("Location: /public/admin/");
+    header("Location: /admin/");
 }
 
 function redirigir_login()
