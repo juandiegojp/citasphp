@@ -19,4 +19,4 @@ CREATE TABLE citas (
 -- carga inicial
 
 INSERT INTO usuarios (codigo, nombre, password)
-    VALUES ('0000', 'admin', crypt('admin', gen_salt('bf', 10))), ('1010','jdjp', crypt('jdjp', gen_salt('bf', 10)));
+    VALUES ('0000', 'admin', crypt('admin', gen_salt('bf', 10))), ('1010','jdjp', crypt('jdjp', gen_salt('bf', 10))), ('2121','qqq', crypt('1111', gen_salt('bf', 10)));
