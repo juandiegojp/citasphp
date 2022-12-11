@@ -15,12 +15,22 @@
     <?php
     require '../vendor/autoload.php';
     require '../src/_navbar.php';
-    require '../src/_login.php';
     require '../src/_breadcrumb.php';
 
     use Carbon\Carbon;
 
+    $id = \App\Tablas\Usuario::logueado()->id;
     $fecha_citas = Carbon::now()->locale('es_ES')->setTimezone('Europe/Madrid');
+    $pdo = conectar();
+    $sent = $pdo->prepare('SELECT fecha FROM citas WHERE id_cita = 
+                            (SELECT max(id_cita) FROM citas WHERE id_usuario = :id)');
+    $sent->execute([':id' => $id]);
+    $fechaCita = $sent->fetch(PDO::FETCH_ASSOC);
+
+    if ($fechaCita['fecha'] > $fecha_citas->toDateString()) {
+        $_SESSION['error'] = 'No puedes solicitar otra cita si tienes una pendiente de asistir.';
+        return volver();
+    }
 
     if ($fecha_citas->hour > '20') {
         $fecha_citas = $fecha_citas->addDays()->hour(10)->minute(0)->second(0);
@@ -29,6 +39,9 @@
         $fecha_citas = $fecha_citas->hour(10)->minute(0)->second(0);
     }
     ?>
+
+<p><?= $fecha_citas->toDateString() ?></p>
+<p><?= $fechaCita['fecha'] ?></p>
 
     <!--     SELECT PARA LAS FECHAS DE LAS CITAS -->
     <form method="POST" action="/citaHora.php">
