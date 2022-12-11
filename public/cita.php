@@ -16,22 +16,30 @@
     require '../vendor/autoload.php';
     require '../src/_navbar.php';
     require '../src/_login.php';
+    require '../src/_breadcrumb.php';
 
     use Carbon\Carbon;
 
     $fecha_citas = Carbon::now()->locale('es_ES')->setTimezone('Europe/Madrid');
-    if ($fecha_citas->hour >= '21') {
+
+    if ($fecha_citas->hour > '20') {
         $fecha_citas = $fecha_citas->addDays()->hour(10)->minute(0)->second(0);
     }
+    if ($fecha_citas->hour < '10') {
+        $fecha_citas = $fecha_citas->hour(10)->minute(0)->second(0);
+    }
     ?>
-    <!--
-    <p>Fecha y hora: <?= $fecha_citas ?></p>
-    <p>hora: <?= $fecha_citas->hour ?></p>
-    -->
-    <div class="flex flex-wrap">
+    <div class="grid grid-cols-5 gap-4 mx-4">
         <?php while ($fecha_citas->daysInMonth <= 31 && $fecha_citas->month == '12') : ?>
-            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" data-modal-toggle="staticModal">
-                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"> <?= $fecha_citas->isoFormat('L'); ?> </h5>
+            <?php
+            while ($fecha_citas->isWeekend()) {
+                $fecha_citas->addDay();
+            }
+            ?>
+            <a href="#" class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-md hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700" data-modal-toggle="staticModal">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">
+                    <?= $fecha_citas->isoFormat('L'); ?>
+                </h5>
             </a>
             <!-- Main modal -->
             <div id="staticModal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
@@ -66,11 +74,12 @@
                     </div>
                 </div>
             </div>
-
-            <?php $fecha_citas->addDays() ?>
+            <?php
+            $fecha_citas->addDay();
+            ?>
         <?php endwhile ?>
     </div>
     <script src="https://unpkg.com/flowbite@1.5.4/dist/flowbite.js"></script>
 </body>
 
-</html
+</html>
